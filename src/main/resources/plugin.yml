@@ -1,0 +1,6 @@
+name: FTSTools
+version: '1.0'
+main: de.ftscraft.ftstools.FTSTools
+api-version: '1.21'
+
+depend: [ FTSUtils ]
