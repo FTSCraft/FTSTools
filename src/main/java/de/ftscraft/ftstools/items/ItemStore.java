@@ -1,9 +1,9 @@
 package de.ftscraft.ftstools.items;
 
 import org.bukkit.inventory.ItemStack;
-
 import java.util.Map;
 import java.util.TreeMap;
+import org.bukkit.plugin.Plugin;
 
 public class ItemStore {
 
@@ -17,4 +17,7 @@ public class ItemStore {
         items.put(sign, item);
     }
 
+    public static void logAllItemsLoaded(Plugin plugin) {
+        plugin.getLogger().info("All custom items have been loaded. Total: " + items.size());
+    }
 }
