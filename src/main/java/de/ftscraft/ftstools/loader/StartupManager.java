@@ -5,50 +5,54 @@ import de.ftscraft.ftstools.FTSTools;
 import de.ftscraft.ftstools.items.ItemStore;
 import de.ftscraft.ftstools.loader.initializer.ItemInitializer;
 import de.ftscraft.ftsutils.items.ItemReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-public class StartupManager {
-    private ConfigManager configManager;
-    private ItemLoader itemLoader;
-    private RecipeLoader recipeLoader;
-    private final ArrayList<ItemInitializer> itemInitializers = new ArrayList<>();
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-    public void startUp() {
+public class StartupManager {
+    private static ConfigManager configManager;
+    private static ItemLoader itemLoader;
+    private static RecipeLoader recipeLoader;
+
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private final static ArrayList<ItemInitializer> itemInitializers = new ArrayList<>();
+
+    public static void startUp() {
         configManager = new ConfigManager();
         itemLoader = new ItemLoader();
         recipeLoader = new RecipeLoader();
         initItemsAndRecipes();
     }
 
-    private void initItemsAndRecipes() {
+    private static void initItemsAndRecipes() {
         initItems();
-        ItemStore.logAllItemsLoaded(FTSTools.getInstance());
         initRecipes();
     }
 
-    private void initItems() {
+    private static void initItems() {
         initPluginItems();
         initIntermediateItems();
         initPluginConfigItems();
+
+        FTSTools.getInstance().getLogger().info("All custom items have been loaded. Total: " + ItemStore.size());
     }
 
-    private void initPluginItems() {
+    private static void initPluginItems() {
         itemInitializers.forEach(ItemInitializer::initializeItems);
     }
 
-    private void initIntermediateItems() {
+    private static void initIntermediateItems() {
         for (ConfigurationSection itemSection : configManager.getAllItemSections()) {
             ItemStore.addItem(itemSection.getString("sign"), itemLoader.generateItem(itemSection));
         }
     }
 
-    private void initPluginConfigItems() {
+    private static void initPluginConfigItems() {
         for (ConfigurationSection itemSection : configManager.getAllItemSections()) {
             String sign = itemSection.getString("sign");
             if (sign != null) {
@@ -58,7 +62,7 @@ public class StartupManager {
         }
     }
 
-    private void initRecipes() {
+    private static void initRecipes() {
         Set<String> allSigns = new HashSet<>();
 
         for (ConfigurationSection itemSection : configManager.getAllItemSections()) {

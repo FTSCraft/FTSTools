@@ -1,11 +1,7 @@
 package de.ftscraft.ftstools.loader;
 
+import de.ftscraft.ftstools.FTSTools;
 import de.ftscraft.ftsutils.items.ItemBuilder;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Color;
@@ -16,59 +12,97 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.NoSuchElementException;
+
 public class ItemLoader {
+
     public ItemStack generateItem(ConfigurationSection itemSection) {
+
         String stringMat = itemSection.getString("material");
         if (stringMat == null) {
-            throw new RuntimeException("no material given for " + itemSection.getParent().getName());
+            //noinspection DataFlowIssue
+            throw new NoSuchElementException("no material given for " + itemSection.getParent().getName());
         }
+
         Material mat = Material.getMaterial(stringMat);
         if (mat == null) {
-            throw new RuntimeException("no material " + stringMat + " found for section " + itemSection.getParent().getName());
+            //noinspection DataFlowIssue
+            throw new NoSuchElementException("no material " + stringMat + " found for section " + itemSection.getParent().getName());
         }
 
         String miniMsgName = itemSection.getString("name");
-        List<String> lore = itemSection.getStringList("lore");
+        if (miniMsgName == null) {
+            throw new NoSuchElementException("no name given for item");
+        }
+
         String sign = itemSection.getString("sign");
         boolean placeable = itemSection.getBoolean("placeable", false);
-        assert miniMsgName != null;
+
         ItemBuilder builder = new ItemBuilder(mat)
                 .name(MiniMessage.miniMessage().deserialize(miniMsgName).decoration(TextDecoration.ITALIC, false))
                 .placeable(placeable)
                 .sign(sign);
-        Stream<Component> loreStream = lore.stream()
-                .map(l -> MiniMessage.miniMessage().deserialize(l).decoration(TextDecoration.ITALIC, false));
-        Objects.requireNonNull(builder);
-        loreStream.forEach(builder::lore);
 
+        addLore(itemSection, builder);
+        addEnchantments(itemSection, builder);
+        addLeatherColor(itemSection, mat, builder);
+
+        ItemStack result = builder.build();
+
+        addModelData(itemSection, result);
+
+        return result;
+    }
+
+    private static void addLore(ConfigurationSection itemSection, ItemBuilder builder) {
+        var lore = itemSection.getStringList("lore");
+        lore.stream()
+                .map(l -> MiniMessage.miniMessage().deserialize(l).decoration(TextDecoration.ITALIC, false))
+                .forEach(builder::lore);
+    }
+
+    private static void addEnchantments(ConfigurationSection itemSection, ItemBuilder builder) {
         boolean hasEnchantments = false;
-        if (itemSection.contains("enchantments")) {
-            for (String ench : itemSection.getStringList("enchantments")) {
-                String[] parts = ench.split(":");
-                if (parts.length == 2) {
-                    try {
-                        Enchantment enchantment = Enchantment.getByName(parts[0].toUpperCase());
-                        int level = Integer.parseInt(parts[1]);
-                        if (enchantment != null) {
-                            builder.enchant(enchantment, level);
-                            hasEnchantments = true;
-                        }
-                    } catch (Exception ignored) {
-                    }
+        if (!itemSection.contains("enchantments")) {
+            return;
+        }
+
+        for (String ench : itemSection.getStringList("enchantments")) {
+            String[] parts = ench.split(":");
+            if (parts.length != 2) {
+                continue;
+            }
+
+            try {
+                //noinspection deprecation
+                Enchantment enchantment = Enchantment.getByName(parts[0].toUpperCase());
+                if (enchantment != null) {
+                    int level = Integer.parseInt(parts[1]);
+                    builder.enchant(enchantment, level);
+                    hasEnchantments = true;
+                } else {
+                    FTSTools.getInstance().getLogger().warning("No enchantment " + parts[0] + " found. Can't add enchantment");
                 }
+            } catch (NumberFormatException formatException) {
+                FTSTools.getInstance().getLogger().warning("No number given. Can't add enchantment");
             }
         }
 
         if (hasEnchantments) {
-            builder.addFlags(new ItemFlag[]{ItemFlag.HIDE_ENCHANTS});
+            builder.addFlags(ItemFlag.HIDE_ENCHANTS);
         }
 
-        // Handle color for leather items
+    }
+
+    private static void addLeatherColor(ConfigurationSection itemSection, Material mat, ItemBuilder builder) {
         if (itemSection.contains("color") && mat.name().startsWith("LEATHER_")) {
             String colorStr = itemSection.getString("color");
-            Color color = null;
+            if (colorStr == null) {
+                FTSTools.getInstance().getLogger().warning("Could not get Leather color for item " + itemSection.getName());
+                return;
+            }
+            Color color;
             try {
-                assert colorStr != null;
                 if (colorStr.startsWith("#")) {
                     java.awt.Color awtColor = java.awt.Color.decode(colorStr);
                     color = Color.fromRGB(awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue());
@@ -82,24 +116,15 @@ public class ItemLoader {
             } catch (Exception ignored) {
             }
         }
+    }
 
-        ItemStack result = builder.build();
-
-        // Set custom model data
-        if (itemSection.contains("custom_model_data")) {
-            int customModelData = itemSection.getInt("custom_model_data");
-            ItemMeta meta = result.getItemMeta();
-            meta.setCustomModelData(customModelData);
-            result.setItemMeta(meta);
+    private static void addModelData(ConfigurationSection itemSection, ItemStack result) {
+        if (!itemSection.contains("custom_model_data")) {
+            return;
         }
-
-        // Hide enchantments
-        if (hasEnchantments) {
-            ItemMeta meta = result.getItemMeta();
-            meta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ENCHANTS});
-            result.setItemMeta(meta);
-        }
-
-        return result;
+        int customModelData = itemSection.getInt("custom_model_data");
+        ItemMeta meta = result.getItemMeta();
+        meta.setCustomModelData(customModelData);
+        result.setItemMeta(meta);
     }
 }

@@ -1,2 +1,8 @@
-# Project exclude paths
-/target/
+# Other IDE files
+*.classpath
+*.project
+*.settings/
+.idea/*
+*.iml
+.DS_Store
+target/

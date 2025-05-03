@@ -3,9 +3,10 @@ package de.ftscraft.ftstools;
 import de.ftscraft.ftstools.items.ItemStore;
 import de.ftscraft.ftstools.listeners.CraftListener;
 import de.ftscraft.ftstools.loader.StartupManager;
-import java.util.Set;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Set;
 
 public final class FTSTools extends JavaPlugin {
     private static FTSTools instance;
@@ -13,7 +14,12 @@ public final class FTSTools extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        new StartupManager().startUp();
+        StartupManager.startUp();
+
+        initListeners();
+    }
+
+    private void initListeners() {
         Set<String> allSigns = StartupManager.getAllConfigSigns();
         getServer().getPluginManager().registerEvents(new CraftListener(allSigns), this);
     }
@@ -30,4 +36,5 @@ public final class FTSTools extends JavaPlugin {
     public static ItemStack getItemBySign(String sign) {
         return ItemStore.getItem(sign);
     }
+
 }

@@ -1,13 +1,13 @@
 package de.ftscraft.ftstools;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ConfigManager {
 
@@ -20,6 +20,7 @@ public class ConfigManager {
     private void loadAllConfigs() {
         File configDir = new File(FTSTools.getInstance().getDataFolder(), "items");
         if (!configDir.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             configDir.mkdirs();
         }
 
@@ -70,7 +71,8 @@ public class ConfigManager {
             ConfigurationSection intermediateItems = config.getConfigurationSection("intermediate_items");
             if (intermediateItems != null) {
                 for (String intermediateItemName : intermediateItems.getKeys(false)) {
-                    ConfigurationSection recipeSection = Objects.requireNonNull(intermediateItems.getConfigurationSection(intermediateItemName)).getConfigurationSection("recipe");
+                    //noinspection DataFlowIssue
+                    ConfigurationSection recipeSection = intermediateItems.getConfigurationSection(intermediateItemName).getConfigurationSection("recipe");
                     if (recipeSection != null) {
                         recipeSections.add(recipeSection);
                     }
@@ -80,7 +82,8 @@ public class ConfigManager {
             ConfigurationSection pluginItems = config.getConfigurationSection("plugin_items");
             if (pluginItems != null) {
                 for (String pluginItemName : pluginItems.getKeys(false)) {
-                    ConfigurationSection recipeSection = Objects.requireNonNull(pluginItems.getConfigurationSection(pluginItemName)).getConfigurationSection("recipe");
+                    //noinspection DataFlowIssue
+                    ConfigurationSection recipeSection = pluginItems.getConfigurationSection(pluginItemName).getConfigurationSection("recipe");
                     if (recipeSection != null) {
                         recipeSections.add(recipeSection);
                     }

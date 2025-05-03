@@ -1,7 +1,7 @@
 name: FTSTools
 version: '1.0'
 main: de.ftscraft.ftstools.FTSTools
-authors: [RxL | halberfan]
+authors: [ RxL | halberfan ]
 api-version: '1.21'
 
 depend: [ FTSUtils ]
