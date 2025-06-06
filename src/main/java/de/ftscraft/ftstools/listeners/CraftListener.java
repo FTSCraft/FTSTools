@@ -21,17 +21,17 @@ public class CraftListener implements Listener {
         CraftingInventory inv = event.getInventory();
         ItemStack[] matrix = inv.getMatrix();
 
+        ItemStack result = inv.getResult();
+        String resultSign = result != null ? ItemReader.getSign(result) : null;
+        if (resultSign != null && allSigns.contains(resultSign)) {
+            return;
+        }
         for (ItemStack item : matrix) {
             if (item == null || item.getType().isAir()) {
                 continue;
             }
             String sign = ItemReader.getSign(item);
             if (sign == null || !allSigns.contains(sign)) {
-                continue;
-            }
-            ItemStack result = inv.getResult();
-            String resultSign = result != null ? ItemReader.getSign(result) : null;
-            if (resultSign != null && allSigns.contains(resultSign)) {
                 continue;
             }
             inv.setResult(null);
