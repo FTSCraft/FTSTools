@@ -1,8 +1,8 @@
 package de.ftscraft.ftstools.items;
 
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -21,4 +21,9 @@ public class ItemStore {
     public static int size() {
         return items.size();
     }
+
+    public static Collection<ItemStack> getAllItems() {
+        return items.values();
+    }
+
 }

@@ -1,5 +1,6 @@
 package de.ftscraft.ftstools;
 
+import de.ftscraft.ftstools.commands.ToolsCommand;
 import de.ftscraft.ftstools.items.ItemStore;
 import de.ftscraft.ftstools.listeners.CraftListener;
 import de.ftscraft.ftstools.loader.StartupManager;
@@ -17,6 +18,7 @@ public final class FTSTools extends JavaPlugin {
         StartupManager.startUp();
 
         initListeners();
+        new ToolsCommand(this);
     }
 
     private void initListeners() {
