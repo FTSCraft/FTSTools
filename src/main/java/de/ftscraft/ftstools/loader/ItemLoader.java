@@ -49,6 +49,7 @@ public class ItemLoader {
         addEnchantments(itemSection, builder);
         addLeatherColor(itemSection, mat, builder);
         addCraftingEnv(itemSection, builder);
+        addOpenCraftingEnv(itemSection, builder);
 
         ItemStack result = builder.build();
 
@@ -136,7 +137,7 @@ public class ItemLoader {
             return;
         }
         builder.addPDC("crafting-envs",
-                Utils.transformStringListToString(itemSection.getStringList("crafting-envs")),
+                Utils.transformStringListToString(itemSection.getStringList("crafting-envs")).toLowerCase(),
                 PersistentDataType.STRING);
     }
 
@@ -145,7 +146,7 @@ public class ItemLoader {
             return;
         }
         builder.addPDC("open-crafting-env",
-                itemSection.getString("open-crafting-env"),
+                itemSection.getString("open-crafting-env").toLowerCase(),
                 PersistentDataType.STRING);
     }
 

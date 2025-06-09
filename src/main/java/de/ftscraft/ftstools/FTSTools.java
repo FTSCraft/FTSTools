@@ -3,11 +3,10 @@ package de.ftscraft.ftstools;
 import de.ftscraft.ftstools.commands.ToolsCommand;
 import de.ftscraft.ftstools.items.ItemStore;
 import de.ftscraft.ftstools.listeners.CraftListener;
+import de.ftscraft.ftstools.listeners.PlayerInteractListener;
 import de.ftscraft.ftstools.loader.StartupManager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Set;
 
 public final class FTSTools extends JavaPlugin {
     private static FTSTools instance;
@@ -15,15 +14,15 @@ public final class FTSTools extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        StartupManager.startUp();
+        StartupManager.startUp(this);
 
         initListeners();
         new ToolsCommand(this);
     }
 
     private void initListeners() {
-        Set<String> allSigns = StartupManager.getAllConfigSigns();
-        getServer().getPluginManager().registerEvents(new CraftListener(allSigns), this);
+        new CraftListener(this);
+        new PlayerInteractListener(this);
     }
 
     @Override

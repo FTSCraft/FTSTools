@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class CraftingEnvManager {
 
-    private static Map<String, CraftingEnvironment> craftingEnvironments = new HashMap<>();
+    private static final Map<String, CraftingEnvironment> craftingEnvironments = new HashMap<>();
 
     public static CraftingEnvironment getCraftingEnv(String id) {
         return craftingEnvironments.get(id);

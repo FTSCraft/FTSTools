@@ -11,15 +11,17 @@ import java.io.File;
 
 public class CraftingEnvLoader {
 
-    private final File file;
     private final FileConfiguration config;
+    private final FTSTools plugin;
 
     public CraftingEnvLoader(FTSTools plugin) {
-        this.file = new File(plugin.getDataFolder(), "crafting-envs.yml");
+        this.plugin = plugin;
+        File file = new File(plugin.getDataFolder(), "crafting-envs.yml");
         if (!file.exists()) {
             plugin.saveResource("crafting-envs.yml", false);
         }
         this.config = YamlConfiguration.loadConfiguration(file);
+        loadEnvironments();
     }
 
     public void loadEnvironments() {
@@ -27,13 +29,15 @@ public class CraftingEnvLoader {
         if (section == null) return;
 
         for (String key : section.getKeys(false)) {
+            plugin.getLogger().info(key);
             String name = section.getString(key + ".name");
+            String id = section.getString(key+".id").toLowerCase();
             boolean allowVanilla = section.getBoolean(key + ".allow-vanilla-recipes", true);
 
             if (name == null) continue;
 
-            CraftingEnvironment env = new CraftingEnvironment(name, allowVanilla);
-            CraftingEnvManager.addCraftingEnv(name, env);
+            CraftingEnvironment env = new CraftingEnvironment(id, name, allowVanilla);
+            CraftingEnvManager.addCraftingEnv(id, env);
         }
     }
 }

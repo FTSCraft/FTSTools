@@ -22,8 +22,9 @@ public class StartupManager {
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private final static ArrayList<ItemInitializer> itemInitializers = new ArrayList<>();
 
-    public static void startUp() {
+    public static void startUp(FTSTools plugin) {
         configManager = new ConfigManager();
+        new CraftingEnvLoader(plugin);
         itemLoader = new ItemLoader();
         recipeLoader = new RecipeLoader();
         initItemsAndRecipes();

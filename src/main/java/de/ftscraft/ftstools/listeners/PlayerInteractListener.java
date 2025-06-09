@@ -1,5 +1,6 @@
 package de.ftscraft.ftstools.listeners;
 
+import de.ftscraft.ftstools.FTSTools;
 import de.ftscraft.ftstools.environments.CraftingEnvManager;
 import de.ftscraft.ftstools.environments.CraftingEnvironment;
 import de.ftscraft.ftstools.misc.Utils;
@@ -10,6 +11,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 public class PlayerInteractListener implements Listener {
+
+    public PlayerInteractListener(FTSTools plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
@@ -28,12 +33,14 @@ public class PlayerInteractListener implements Listener {
         String craftingEnvId;
         try {
             craftingEnvId = ItemReader.getPDC(event.getItem(), Utils.PDC_OPEN_CRAFTING_ENV, PersistentDataType.STRING);
+            if (craftingEnvId == null)
+                return;
         } catch (IllegalArgumentException ex) {
             return;
         }
 
         CraftingEnvironment craftingEnv = CraftingEnvManager.getCraftingEnv(craftingEnvId);
-        event.getPlayer().openInventory(craftingEnv.generateCraftingInv());
+        craftingEnv.generateCraftingInv(event.getPlayer());
 
     }
 
