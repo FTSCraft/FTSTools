@@ -1,0 +1,5 @@
+environments:
+  moerser:
+    name: "&fMörser"
+    allow-vanilla-recipes: false
+    id: "MOERSER"

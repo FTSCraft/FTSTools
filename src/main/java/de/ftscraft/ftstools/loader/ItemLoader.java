@@ -1,6 +1,7 @@
 package de.ftscraft.ftstools.loader;
 
 import de.ftscraft.ftstools.FTSTools;
+import de.ftscraft.ftstools.misc.Utils;
 import de.ftscraft.ftsutils.items.ItemBuilder;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -11,6 +12,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.NoSuchElementException;
 
@@ -46,6 +48,8 @@ public class ItemLoader {
         addLore(itemSection, builder);
         addEnchantments(itemSection, builder);
         addLeatherColor(itemSection, mat, builder);
+        addCraftingEnv(itemSection, builder);
+        addOpenCraftingEnv(itemSection, builder);
 
         ItemStack result = builder.build();
 
@@ -127,4 +131,23 @@ public class ItemLoader {
         meta.setCustomModelData(customModelData);
         result.setItemMeta(meta);
     }
+
+    private static void addCraftingEnv(ConfigurationSection itemSection, ItemBuilder builder) {
+        if (!itemSection.contains("crafting-envs")) {
+            return;
+        }
+        builder.addPDC("crafting-envs",
+                Utils.transformStringListToString(itemSection.getStringList("crafting-envs")).toLowerCase(),
+                PersistentDataType.STRING);
+    }
+
+    private static void addOpenCraftingEnv(ConfigurationSection itemSection, ItemBuilder builder) {
+        if (!itemSection.contains("open-crafting-env")) {
+            return;
+        }
+        builder.addPDC("open-crafting-env",
+                itemSection.getString("open-crafting-env").toLowerCase(),
+                PersistentDataType.STRING);
+    }
+
 }
