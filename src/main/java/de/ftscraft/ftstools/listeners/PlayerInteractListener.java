@@ -18,7 +18,6 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-
         handleOpenCraftingEnv(event);
 
     }

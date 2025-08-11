@@ -1,6 +1,8 @@
 package de.ftscraft.ftstools;
 
 import de.ftscraft.ftstools.commands.ToolsCommand;
+import de.ftscraft.ftstools.custom.bucket.Large_Bukket_Listener;
+import de.ftscraft.ftstools.custom.handleCrafting;
 import de.ftscraft.ftstools.items.ItemStore;
 import de.ftscraft.ftstools.listeners.CraftListener;
 import de.ftscraft.ftstools.listeners.PlayerInteractListener;
@@ -16,6 +18,8 @@ public final class FTSTools extends JavaPlugin {
         instance = this;
         StartupManager.startUp(this);
 
+        loadConfig();
+
         initListeners();
         new ToolsCommand(this);
     }
@@ -23,6 +27,8 @@ public final class FTSTools extends JavaPlugin {
     private void initListeners() {
         new CraftListener(this);
         new PlayerInteractListener(this);
+        new Large_Bukket_Listener(this);
+        new handleCrafting(this);
     }
 
     @Override
@@ -33,6 +39,14 @@ public final class FTSTools extends JavaPlugin {
     public static FTSTools getInstance() {
         return instance;
     }
+
+    public void loadConfig(){
+        getConfig().options().copyDefaults(true);
+        getConfig().addDefault("skillsPath", "plugins/FTSSkills/playerData");
+        getConfig().addDefault("skillName_LargeBukket", "§bWerkzeugschmieden I");
+        saveConfig();
+    }
+
 
     public static ItemStack getItemBySign(String sign) {
         return ItemStore.getItem(sign);
