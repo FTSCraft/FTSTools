@@ -63,9 +63,7 @@ public class Large_Bukket_Listener implements Listener {
                             player.discoverRecipe(new NamespacedKey(FTSTools.getInstance(), "large_bucket"));
                         }
                     }else {
-                        System.out.println("a");
                         if(!player.hasPermission("ftstools.tool.large_bucket") && !user.hasRequiredSkill()){
-                            System.out.println("Does not have perms, remove recipe...");
                             player.undiscoverRecipe(new NamespacedKey(FTSTools.getInstance(), "large_bucket"));
                         }
                     }
