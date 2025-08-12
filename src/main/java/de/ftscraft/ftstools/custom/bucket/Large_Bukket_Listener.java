@@ -135,15 +135,8 @@ public class Large_Bukket_Listener implements Listener {
             itemStack.setItemMeta(itemMeta);
             event.setItemStack(itemStack);
         }else {
-            itemStack = new ItemStack(Material.BUCKET);
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.displayName(MiniMessage.miniMessage().deserialize("Großer Eimer"));
-            itemMeta.lore(List.of(MiniMessage.miniMessage().deserialize("<white><i>Füllungen: </i>0")));
-            itemMeta.getPersistentDataContainer().set(namespacedKey, PersistentDataType.INTEGER, 0);
-            itemStack.setItemMeta(itemMeta);
-
+            event.setItemStack(null);
         }
-        event.setItemStack(itemStack);
     }
 
 
