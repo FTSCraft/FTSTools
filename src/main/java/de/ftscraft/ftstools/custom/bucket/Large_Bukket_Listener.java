@@ -48,7 +48,6 @@ public class Large_Bukket_Listener implements Listener {
         Large_Bukket.setIngredient('A', Material.IRON_BLOCK);
         Large_Bukket.setIngredient('B', Material.BUCKET);
         Bukkit.addRecipe(Large_Bukket);
-        Bukkit.getConsoleSender().sendMessage("Rezept 'Large_Bukket' registiert!");
         check();
     }
 

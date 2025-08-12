@@ -3,6 +3,8 @@ package de.ftscraft.ftstools;
 import de.ftscraft.ftstools.commands.ToolsCommand;
 import de.ftscraft.ftstools.custom.bucket.Large_Bukket_Listener;
 import de.ftscraft.ftstools.custom.handleCrafting;
+import de.ftscraft.ftstools.custom.klappspaten.Klappspaten_Listener;
+import de.ftscraft.ftstools.custom.laubschneider.Laubschneider_Listener;
 import de.ftscraft.ftstools.items.ItemStore;
 import de.ftscraft.ftstools.listeners.CraftListener;
 import de.ftscraft.ftstools.listeners.PlayerInteractListener;
@@ -28,6 +30,8 @@ public final class FTSTools extends JavaPlugin {
         new CraftListener(this);
         new PlayerInteractListener(this);
         new Large_Bukket_Listener(this);
+        new Klappspaten_Listener(this);
+        new Laubschneider_Listener(this);
         new handleCrafting(this);
     }
 
