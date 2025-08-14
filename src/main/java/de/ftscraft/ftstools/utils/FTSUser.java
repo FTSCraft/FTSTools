@@ -13,6 +13,7 @@ public class FTSUser {
     List<String> skills;
     private final String skillPath;
     private final String skillName_LargeBukket;
+    private final String skillName_MagicBundle;
 
     private final File file;
     private YamlConfiguration configuration;
@@ -22,6 +23,7 @@ public class FTSUser {
 
         skillPath = FTSTools.getInstance().getConfig().getString("skillsPath");
         skillName_LargeBukket = FTSTools.getInstance().getConfig().getString("skillName_LargeBukket");
+        skillName_MagicBundle = FTSTools.getInstance().getConfig().getString("skillName_MagicBundle");
         file = new File(skillPath, uuid.toString()+".yml");
 
         if(file != null){
@@ -53,9 +55,18 @@ public class FTSUser {
         }
     }
 
-    public boolean hasRequiredSkill(){
+    public boolean hasLargeBukketSkill(){
         if(getSkills()!=null){
             if(getSkills().contains(skillName_LargeBukket)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasMagicBundleSkill(){
+        if(getSkills()!=null){
+            if(getSkills().contains(skillName_MagicBundle)){
                 return true;
             }
         }

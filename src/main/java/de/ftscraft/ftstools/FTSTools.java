@@ -4,7 +4,9 @@ import de.ftscraft.ftstools.commands.ToolsCommand;
 import de.ftscraft.ftstools.custom.bucket.Large_Bukket_Listener;
 import de.ftscraft.ftstools.custom.handleCrafting;
 import de.ftscraft.ftstools.custom.klappspaten.Klappspaten_Listener;
+import de.ftscraft.ftstools.custom.ladderPlaceListener;
 import de.ftscraft.ftstools.custom.laubschneider.Laubschneider_Listener;
+import de.ftscraft.ftstools.custom.magischer_beutel.MagischerBeutel_Listener;
 import de.ftscraft.ftstools.items.ItemStore;
 import de.ftscraft.ftstools.listeners.CraftListener;
 import de.ftscraft.ftstools.listeners.PlayerInteractListener;
@@ -32,7 +34,9 @@ public final class FTSTools extends JavaPlugin {
         new Large_Bukket_Listener(this);
         new Klappspaten_Listener(this);
         new Laubschneider_Listener(this);
+        new MagischerBeutel_Listener(this);
         new handleCrafting(this);
+        new ladderPlaceListener(this);
     }
 
     @Override
@@ -48,6 +52,7 @@ public final class FTSTools extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         getConfig().addDefault("skillsPath", "plugins/FTSSkills/playerData");
         getConfig().addDefault("skillName_LargeBukket", "§bWerkzeugschmieden I");
+        getConfig().addDefault("skillName_MagicBundle", "§bSchneiderei");
         saveConfig();
     }
 

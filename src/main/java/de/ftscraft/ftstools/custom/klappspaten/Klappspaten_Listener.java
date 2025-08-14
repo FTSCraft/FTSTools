@@ -4,6 +4,7 @@ import de.ftscraft.ftstools.FTSTools;
 import de.ftscraft.ftsutils.items.ItemReader;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -11,9 +12,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Klappspaten_Listener implements Listener {
 
@@ -31,13 +34,15 @@ public class Klappspaten_Listener implements Listener {
         if(itemInHand.getType().equals(Material.DIAMOND_SHOVEL)){
             String sign = ItemReader.getSign(itemInHand);
             if (sign != null && sign.equals("KLAPPSPATEN")) {
-                excavateArea(event.getBlock(), event.getPlayer(), event.getPlayer().getTargetBlockFace(10));
+                excavateArea(event.getBlock(), event.getPlayer(), event.getPlayer().getTargetBlockFace(10), itemInHand, event.getPlayer());
+                event.getPlayer().updateInventory();
             }
         }
     }
 
-    public void excavateArea(Block centerBlock, Player p, BlockFace direction) {
+    public void excavateArea(Block centerBlock, Player p, BlockFace direction, ItemStack item, Player player) {
         klappspatenUser.add(p);
+        AtomicReference<Short> breakedBlocks = new AtomicReference<>((short) 0);
         Bukkit.getScheduler().runTask(FTSTools.getInstance(), () -> {
             if (direction == BlockFace.UP || direction == BlockFace.DOWN) {
                 for (int xOffset = -1; xOffset <= 1; xOffset++) {
@@ -45,6 +50,15 @@ public class Klappspaten_Listener implements Listener {
                         Block targetBlock = centerBlock.getRelative(xOffset, 0, zOffset);
                         if (isValidBlock(targetBlock.getType())) {
                             p.breakBlock(targetBlock);
+                            Damageable damageable = (Damageable) item.getItemMeta();
+                            damageable.setDamage(damageable.getDamage() + 1);
+                            item.setItemMeta(damageable);
+                            int damage = damageable.getDamage();
+                            int maxDurability = item.getType().getMaxDurability();
+                            if (damage >= maxDurability) {
+                                player.getInventory().setItemInMainHand(null); // Item entfernen
+                                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                            }
                         }
                     }
                 }
@@ -55,6 +69,15 @@ public class Klappspaten_Listener implements Listener {
                             Block targetBlock = centerBlock.getRelative(0, yOffset, zOffset);
                             if (isValidBlock(targetBlock.getType())) {
                                 p.breakBlock(targetBlock);
+                                Damageable damageable = (Damageable) item.getItemMeta();
+                                damageable.setDamage(damageable.getDamage() + 1);
+                                item.setItemMeta(damageable);
+                                int damage = damageable.getDamage();
+                                int maxDurability = item.getType().getMaxDurability();
+                                if (damage >= maxDurability) {
+                                    player.getInventory().setItemInMainHand(null); // Item entfernen
+                                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                                }
                             }
                         }
                     }
@@ -64,6 +87,15 @@ public class Klappspaten_Listener implements Listener {
                             Block targetBlock = centerBlock.getRelative(xOffset, yOffset, 0);
                             if (isValidBlock(targetBlock.getType())) {
                                 p.breakBlock(targetBlock);
+                                Damageable damageable = (Damageable) item.getItemMeta();
+                                damageable.setDamage(damageable.getDamage() + 1);
+                                item.setItemMeta(damageable);
+                                int damage = damageable.getDamage();
+                                int maxDurability = item.getType().getMaxDurability();
+                                if (damage >= maxDurability) {
+                                    player.getInventory().setItemInMainHand(null); // Item entfernen
+                                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                                }
                             }
                         }
                     }

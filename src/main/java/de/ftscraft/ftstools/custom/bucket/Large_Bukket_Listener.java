@@ -1,19 +1,14 @@
 package de.ftscraft.ftstools.custom.bucket;
 
 import de.ftscraft.ftstools.FTSTools;
-import de.ftscraft.ftstools.custom.bucket.objective.LargeBukket;
 import de.ftscraft.ftstools.utils.FTSUser;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -58,12 +53,21 @@ public class Large_Bukket_Listener implements Listener {
                 Bukkit.getOnlinePlayers().forEach(player -> {
                     FTSUser user = new FTSUser(player.getUniqueId());
                     if(!player.hasDiscoveredRecipe(new NamespacedKey(FTSTools.getInstance(), "large_bucket"))){
-                        if(player.hasPermission("ftstools.tool.large_bucket") || user.hasRequiredSkill()){
+                        if(player.hasPermission("ftstools.tool.large_bucket") || user.hasLargeBukketSkill()){
                             player.discoverRecipe(new NamespacedKey(FTSTools.getInstance(), "large_bucket"));
                         }
                     }else {
-                        if(!player.hasPermission("ftstools.tool.large_bucket") && !user.hasRequiredSkill()){
+                        if(!player.hasPermission("ftstools.tool.large_bucket") && !user.hasLargeBukketSkill()){
                             player.undiscoverRecipe(new NamespacedKey(FTSTools.getInstance(), "large_bucket"));
+                        }
+                    }
+                    if(!player.hasDiscoveredRecipe(new NamespacedKey(FTSTools.getInstance(), "magic_bundle"))){
+                        if(player.hasPermission("ftstools.tool.magic_bundle") || user.hasMagicBundleSkill()){
+                            player.discoverRecipe(new NamespacedKey(FTSTools.getInstance(), "magic_bundle"));
+                        }
+                    }else {
+                        if(!player.hasPermission("ftstools.tool.magic_bundle") && !user.hasMagicBundleSkill()){
+                            player.undiscoverRecipe(new NamespacedKey(FTSTools.getInstance(), "magic_bundle"));
                         }
                     }
                 });
@@ -102,8 +106,7 @@ public class Large_Bukket_Listener implements Listener {
             itemMeta.getPersistentDataContainer().set(namespacedKey, PersistentDataType.INTEGER, 100);
             itemStack.setItemMeta(itemMeta);
             event.setItemStack(itemStack);
-        }
-        if(event.getBlockClicked().getType().equals(Material.LAVA)){
+        }else if(event.getBlockClicked().getType().equals(Material.LAVA)){
             ItemStack itemStack = new ItemStack(Material.LAVA_BUCKET);
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.displayName(MiniMessage.miniMessage().deserialize("Großer Lavaeimer"));
@@ -111,6 +114,8 @@ public class Large_Bukket_Listener implements Listener {
             itemMeta.getPersistentDataContainer().set(namespacedKey, PersistentDataType.INTEGER, 100);
             itemStack.setItemMeta(itemMeta);
             event.setItemStack(itemStack);
+        } else {
+            event.setCancelled(true);
         }
     }
 
