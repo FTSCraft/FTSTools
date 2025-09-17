@@ -106,14 +106,6 @@ public class Large_Bukket_Listener implements Listener {
             itemMeta.getPersistentDataContainer().set(namespacedKey, PersistentDataType.INTEGER, 100);
             itemStack.setItemMeta(itemMeta);
             event.setItemStack(itemStack);
-        }else if(event.getBlockClicked().getType().equals(Material.LAVA)){
-            ItemStack itemStack = new ItemStack(Material.LAVA_BUCKET);
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.displayName(MiniMessage.miniMessage().deserialize("Großer Lavaeimer"));
-            itemMeta.lore(List.of(MiniMessage.miniMessage().deserialize("<white><i>Füllungen: </i>100")));
-            itemMeta.getPersistentDataContainer().set(namespacedKey, PersistentDataType.INTEGER, 100);
-            itemStack.setItemMeta(itemMeta);
-            event.setItemStack(itemStack);
         } else {
             event.setCancelled(true);
         }
