@@ -14,10 +14,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ladderPlaceListener implements Listener {
+@Deprecated(forRemoval = true)
+public class LadderPlaceListener implements Listener {
     private final FTSTools plugin;
 
-    public ladderPlaceListener(FTSTools plugin) {
+    public LadderPlaceListener(FTSTools plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
     }

@@ -1,28 +1,30 @@
 package de.ftscraft.ftstools;
 
 import de.ftscraft.ftstools.commands.ToolsCommand;
-import de.ftscraft.ftstools.custom.bucket.Large_Bukket_Listener;
-import de.ftscraft.ftstools.custom.handleCrafting;
-import de.ftscraft.ftstools.custom.klappspaten.Klappspaten_Listener;
-import de.ftscraft.ftstools.custom.ladderPlaceListener;
-import de.ftscraft.ftstools.custom.laubschneider.Laubschneider_Listener;
-import de.ftscraft.ftstools.custom.magischer_beutel.MagischerBeutel_Listener;
+import de.ftscraft.ftstools.custom.bucket.LargeBucketListener;
+import de.ftscraft.ftstools.custom.klappspaten.KlappspatenListener;
+import de.ftscraft.ftstools.custom.laubschneider.LaubschneiderListener;
+import de.ftscraft.ftstools.custom.magicbundle.MagicBundleHandler;
 import de.ftscraft.ftstools.items.ItemStore;
 import de.ftscraft.ftstools.listeners.CraftListener;
 import de.ftscraft.ftstools.listeners.PlayerInteractListener;
 import de.ftscraft.ftstools.loader.StartupManager;
+import de.ftscraft.ftstools.recipes.RecipeManager;
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class FTSTools extends JavaPlugin {
     private static FTSTools instance;
 
+    private RecipeManager recipeManager;
+
     @Override
     public void onEnable() {
         instance = this;
+        recipeManager = new RecipeManager();
         StartupManager.startUp(this);
-
-        loadConfig();
 
         initListeners();
         new ToolsCommand(this);
@@ -31,29 +33,22 @@ public final class FTSTools extends JavaPlugin {
     private void initListeners() {
         new CraftListener(this);
         new PlayerInteractListener(this);
-        new Large_Bukket_Listener(this);
-        new Klappspaten_Listener(this);
-        new Laubschneider_Listener(this);
-        new MagischerBeutel_Listener(this);
-        new handleCrafting(this);
-        new ladderPlaceListener(this);
+        new LargeBucketListener(this);
+        new KlappspatenListener(this);
+        new LaubschneiderListener(this);
+        new MagicBundleHandler(this);
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        for (NamespacedKey recipeKey : recipeManager.getRecipeKeys()) {
+            Bukkit.removeRecipe(recipeKey);
+        }
+        Bukkit.updateRecipes();
     }
 
     public static FTSTools getInstance() {
         return instance;
-    }
-
-    public void loadConfig(){
-        getConfig().options().copyDefaults(true);
-        getConfig().addDefault("skillsPath", "plugins/FTSSkills/playerData");
-        getConfig().addDefault("skillName_LargeBukket", "§bWerkzeugschmieden I");
-        getConfig().addDefault("skillName_MagicBundle", "§bSchneiderei");
-        saveConfig();
     }
 
 
@@ -61,4 +56,7 @@ public final class FTSTools extends JavaPlugin {
         return ItemStore.getItem(sign);
     }
 
+    public RecipeManager getRecipeManager() {
+        return recipeManager;
+    }
 }

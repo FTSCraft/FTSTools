@@ -2,6 +2,7 @@ package de.ftscraft.ftstools.loader;
 
 import de.ftscraft.ftstools.FTSTools;
 import de.ftscraft.ftstools.items.ItemStore;
+import de.ftscraft.ftstools.recipes.RecipeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -12,6 +13,12 @@ import org.bukkit.inventory.ShapedRecipe;
 import java.util.List;
 
 public class RecipeLoader {
+
+    private final RecipeManager recipeManager;
+
+    public RecipeLoader(RecipeManager recipeManager) {
+        this.recipeManager = recipeManager;
+    }
 
     public void createRecipe(ConfigurationSection recipeSection) {
 
@@ -24,9 +31,9 @@ public class RecipeLoader {
             throw new IllegalStateException("No ItemStack found for key: " + parent.getString("item.sign", parent.getName()) + ". Check the config and item initialization.");
         }
 
-        ShapedRecipe recipe = new ShapedRecipe(
-                new NamespacedKey(FTSTools.getInstance(), sanitizeKey(parent.getName())),
-                result);
+        NamespacedKey key = new NamespacedKey(FTSTools.getInstance(), sanitizeKey(parent.getName()));
+        recipeManager.addRecipeKey(key);
+        ShapedRecipe recipe = new ShapedRecipe(key, result);
 
         List<String> shape = recipeSection.getStringList("shape");
         recipe.shape(shape.toArray(String[]::new));
