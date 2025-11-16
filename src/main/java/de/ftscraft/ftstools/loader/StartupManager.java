@@ -26,7 +26,7 @@ public class StartupManager {
         configManager = new ConfigManager();
         new CraftingEnvLoader(plugin);
         itemLoader = new ItemLoader();
-        recipeLoader = new RecipeLoader();
+        recipeLoader = new RecipeLoader(plugin.getRecipeManager());
         initItemsAndRecipes();
     }
 

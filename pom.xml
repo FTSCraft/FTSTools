@@ -62,7 +62,7 @@
         <dependency>
             <groupId>com.github.FTSCraft</groupId>
             <artifactId>FTSUtils</artifactId>
-            <version>v1.6</version>
+            <version>v1.8</version>
         </dependency>
     </dependencies>
 </project>

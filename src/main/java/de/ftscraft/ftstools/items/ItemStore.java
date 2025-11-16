@@ -11,7 +11,7 @@ public class ItemStore {
     private static final Map<String, ItemStack> items = new TreeMap<>();
 
     public static ItemStack getItem(String sign) {
-        return items.get(sign);
+        return items.get(sign).clone();
     }
 
     public static void addItem(String sign, ItemStack item) {

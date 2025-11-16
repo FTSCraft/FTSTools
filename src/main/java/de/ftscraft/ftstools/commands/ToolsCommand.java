@@ -13,7 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class ToolsCommand implements CommandExecutor {
 
+    private final FTSTools plugin;
+
     public ToolsCommand(FTSTools plugin) {
+        this.plugin = plugin;
         //noinspection DataFlowIssue
         plugin.getCommand("tools").setExecutor(this);
     }
@@ -26,6 +29,13 @@ public class ToolsCommand implements CommandExecutor {
         }
 
         if (!(sender instanceof Player player)) {
+            return true;
+        }
+
+        if (args.length > 0 && args[0].equals("reload")) {
+            plugin.onDisable();
+            plugin.onEnable();
+            sender.sendMessage("Reload fertig!");
             return true;
         }
 
