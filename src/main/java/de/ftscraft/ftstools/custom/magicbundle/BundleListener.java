@@ -34,17 +34,16 @@ public class BundleListener implements Listener {
     public void onEntityClick(PlayerInteractEntityEvent event) {
 
         Player player = event.getPlayer();
+        ItemStack itemInHand = player.getInventory().getItemInMainHand();
+
+        if (!bundleHandler.isEmptyBundle(itemInHand)) {
+            return;
+        }
 
         if (cooldown.getOrDefault(player, 0L) > System.currentTimeMillis()) {
             return;
         } else {
             cooldown.put(player, System.currentTimeMillis() + 500);
-        }
-
-        ItemStack itemInHand = player.getInventory().getItemInMainHand();
-
-        if (!bundleHandler.isEmptyBundle(itemInHand)) {
-            return;
         }
 
         Entity entity = event.getRightClicked();
@@ -66,12 +65,6 @@ public class BundleListener implements Listener {
 
         Player player = event.getPlayer();
 
-        if (cooldown.getOrDefault(player, 0L) > System.currentTimeMillis()) {
-            return;
-        } else {
-            cooldown.put(player, System.currentTimeMillis() + 500);
-        }
-
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
@@ -80,6 +73,12 @@ public class BundleListener implements Listener {
 
         if (!bundleHandler.isFilledBundle(item)) {
             return;
+        }
+
+        if (cooldown.getOrDefault(player, 0L) > System.currentTimeMillis()) {
+            return;
+        } else {
+            cooldown.put(player, System.currentTimeMillis() + 500);
         }
 
         bundleHandler.emptyOutBundle(item, event.getPlayer().getLocation());
